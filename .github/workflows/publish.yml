@@ -69,7 +69,6 @@ jobs:
     name: Publish to PyPI
     needs: build
     runs-on: ubuntu-latest
-    if: false
     permissions:
       id-token: write # Required for trusted publishing
     environment:
@@ -90,7 +89,6 @@ jobs:
     name: Create GitHub Release
     needs: build
     runs-on: ubuntu-latest
-    if: false
     permissions:
       contents: write
     steps:
@@ -110,6 +108,6 @@ jobs:
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           VERSION=${TAG_NAME#v}
-          gh release create $TAG_NAME dist/* --title "ShowerData $VERSION" --generate-notes
+          gh release create $TAG_NAME dist/* --title "ShowerData $VERSION"
         env:
           GH_TOKEN: ${{ github.token }}

@@ -34,7 +34,7 @@ jobs:
         path: build/html-documentation
 
   deploy:
-    if: false && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
