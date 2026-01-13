@@ -1,0 +1,46 @@
+name: Deploy Documentation
+
+on: push
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.13"
+        cache: "pip"
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -e .
+        pip install --group doc
+
+    - name: Build static files
+      id: build
+      run: |
+        mkdir -p docs/_static docs/_templates build
+        sphinx-build -b html -W docs build/html-documentation
+
+    - name: Upload static files as artifact
+      id: deployment
+      uses: actions/upload-pages-artifact@v4
+      with:
+        path: build/html-documentation
+
+  deploy:
+    if: false && github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

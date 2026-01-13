@@ -1,0 +1,115 @@
+name: Build and Publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12", "3.14"]
+        numpy-version: ["2.1.0", "2.3.5"]
+        h5py-version: ["3.11.0", "3.15.1"]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies (Numpy ${{ matrix.numpy-version }}, h5py ${{ matrix.h5py-version }})
+        run: |
+          pip install --upgrade pip
+          pip install numpy==${{ matrix.numpy-version }}
+          pip install h5py==${{ matrix.h5py-version }}
+          pip install .
+          pip install --group test
+
+      - name: Test with PyTest
+        run: |
+          pytest
+
+  build:
+    name: Build Package
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install build dependencies
+        run: |
+          pip install --upgrade pip
+          pip install build twine
+
+      - name: Build package
+        run: python -m build
+
+      - name: Check package
+        run: python -m twine check dist/*
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: dist
+          path: dist/
+
+  pypi_release:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    if: false
+    permissions:
+      id-token: write # Required for trusted publishing
+    environment:
+      name: publish
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v6
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
+  github_release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: false
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Fetch full history
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v6
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create GitHub Release
+        id: create_release
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG_NAME#v}
+          gh release create $TAG_NAME dist/* --title "ShowerData $VERSION" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}

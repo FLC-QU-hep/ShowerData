@@ -1,0 +1,75 @@
+[project]
+name = "showerdata"
+version = "0.6.0"
+description = "A Python library for shower data handling"
+authors = [
+    { name="Thorsten Buss", email="Thorsten.Buss@uni-hamburg.de" }
+]
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10, <4"
+keywords = [
+    "data",
+    "shower",
+    "hep",
+    "particle physics"
+]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "numpy>=2.1.0, <3",
+    "h5py>=3.11.0, <4",
+]
+
+[dependency-groups]
+dev = [
+    "ruff==0.14.8",
+    "pre-commit==4.2.0",
+    "ipykernel>=7.1.0",
+]
+doc = [
+    "sphinx>=8.1.3",
+    "sphinx-autodoc-typehints>=3.0.1",
+    "sphinx-rtd-theme>=3.0.2",
+]
+test = [
+    "pytest==8.4.1",
+]
+
+[project.scripts]
+showerdata = "showerdata.__main__:main"
+
+[project.urls]
+Repository = "https://github.com/ThorstenBuss/ShowerData.git"
+Issues = "https://github.com/ThorstenBuss/ShowerData/issues"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["showerdata"]
+
+[tool.setuptools.package-data]
+showerdata = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v"
+
+[tool.ruff]
+target-version = "py310"
+fix = true
+line-length = 88
+
+[tool.ruff.lint]
+extend-select = ["C4", "I", "SIM", "UP"]
