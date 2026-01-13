@@ -1,15 +1,25 @@
 # ShowerData
+[![PyPI](https://img.shields.io/pypi/v/showerdata)](https://pypi.org/project/showerdata/)
+[![Python Version](https://img.shields.io/pypi/pyversions/showerdata)](https://www.python.org/)
+[![License](https://img.shields.io/pypi/l/showerdata)](https://github.com/FLC-QU-hep/ShowerData/blob/main/LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/FLC-QU-hep/ShowerData/publish.yml?label=build&logo=github)](https://github.com/FLC-QU-hep/ShowerData/actions/workflows/publish.yml)
+[![Unittests](https://img.shields.io/github/actions/workflow/status/FLC-QU-hep/ShowerData/ci.yml?label=unittests&logo=github)](https://github.com/FLC-QU-hep/ShowerData/actions/workflows/ci.yml)
+
 A library to save and load calorimeter shower data in HDF5 format. It stores variable-size point-clouds efficiently and provides easy access to the data.
 
 - [Installation](#installation)
+- [Documentation](#documentation)
 - [Development](#development)
 
 ## Installation
 You can install the library using pip:
 
 ```bash
-pip install git+https://github.com/FLC-QU-hep/ShowerData.git
+pip install showerdata
 ```
+
+## Documentation
+  The full documentation is available at: [https://flc-qu-hep.github.io/ShowerData/](https://flc-qu-hep.github.io/ShowerData/)
 
 ## Development
 If you want to contribute to the development of the library, follow these steps to set up your development environment.

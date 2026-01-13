@@ -20,7 +20,7 @@ Install ShowerData using pip:
 
 .. code-block:: bash
 
-   pip install git+https://github.com/FLC-QU-hep/ShowerData.git
+   pip install showerdata
 
 Load and work with shower data:
 
