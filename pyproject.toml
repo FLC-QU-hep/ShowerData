@@ -48,8 +48,9 @@ test = [
 showerdata = "showerdata.__main__:main"
 
 [project.urls]
-Repository = "https://github.com/ThorstenBuss/ShowerData.git"
-Issues = "https://github.com/ThorstenBuss/ShowerData/issues"
+Repository = "https://github.com/FLC-QU-hep/ShowerData.git"
+Issues = "https://github.com/FLC-QU-hep/ShowerData/issues"
+Documentation = "https://flc-qu-hep.github.io/ShowerData/"
 
 [build-system]
 requires = ["setuptools"]
