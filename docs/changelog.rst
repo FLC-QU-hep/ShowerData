@@ -4,6 +4,15 @@ Changelog
 All notable changes to ShowerData will be documented in this file.
 
 
+[0.6.1] - 2026-01-30
+--------------------
+Fixed
+~~~~~
+- Make ShowerDataFile iterable over showers as expected
+- Fix urls in pyproject.toml
+- Improve error messages when initializing Showers object with invalid data
+
+
 [0.6.0] - 2026-01-13
 --------------------
 
