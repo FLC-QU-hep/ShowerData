@@ -1,6 +1,6 @@
 [project]
 name = "showerdata"
-version = "0.6.0"
+version = "0.6.1"
 description = "A Python library for shower data handling"
 authors = [
     { name="Thorsten Buss", email="Thorsten.Buss@uni-hamburg.de" }
