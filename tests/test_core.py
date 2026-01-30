@@ -1,5 +1,6 @@
 import os
 import re
+import tempfile
 from collections.abc import Generator
 
 import h5py
@@ -376,6 +377,35 @@ def test_shower_file() -> None:
     )
     assert data._num_points.shape == loaded_data._num_points.shape, (
         "Loaded num_points data shape mismatch"
+    )
+
+
+def test_iterate_shower_file() -> None:
+    data = next(generate_test_data(batch_size=10, num_batches=1))
+    with tempfile.TemporaryDirectory() as temp_dir:
+        file = os.path.join(temp_dir, "test_iterate_shower_file.h5")
+        showerdata.save(data, file, overwrite=True)
+        loaded_showers: list[showerdata.Showers] = []
+        with showerdata.ShowerDataFile(file) as shower_file:
+            for shower in shower_file:
+                assert len(shower) == 1, "Each shower should contain a single entry"
+                loaded_showers.append(shower)
+        loaded_data = showerdata.concatenate(loaded_showers)
+    assert np.array_equal(data.points, loaded_data.points), (
+        "Loaded points data mismatch"
+    )
+    assert np.array_equal(data.energies, loaded_data.energies), (
+        "Loaded energies data mismatch"
+    )
+    assert np.array_equal(data.pdg, loaded_data.pdg), "Loaded PDG data mismatch"
+    assert np.array_equal(data.directions, loaded_data.directions), (
+        "Loaded directions data mismatch"
+    )
+    assert np.array_equal(data.shower_ids, loaded_data.shower_ids), (
+        "Loaded shower IDs data mismatch"
+    )
+    assert np.array_equal(data._num_points, loaded_data._num_points), (
+        "Loaded num_points data mismatch"
     )
 
 
