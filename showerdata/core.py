@@ -175,7 +175,7 @@ class Showers:
     def __post_init__(self):
         if self.points.ndim != 3 or self.points.shape[2] not in (4, 5):
             raise ValueError(
-                "Showers must be a 3D array with shape (num_showers, max_points, 4 or 5)."
+                f"Points must be a 3D array with shape (num_showers, max_points, 4 or 5) got {self.points.shape}"
             )
         if self.energies.ndim != 2 or self.energies.shape != (self.points.shape[0], 1):
             raise ValueError("Energies must be a 2D array with shape (num_showers, 1).")
@@ -939,9 +939,16 @@ class ShowerDataFile:
     def __getitem__(self, index: index_type) -> Showers:
         if not self.file:
             raise ValueError("File is not open.")
-        if isinstance(index, tuple) and len(index) > 1:
-            raise ValueError("Multi-dimensional indexing is not supported.")
+        if isinstance(index, tuple):
+            if len(index) > 1 or len(index) == 0:
+                raise ValueError("Multi-dimensional indexing is not supported.")
+            else:
+                index = index[0]
         if isinstance(index, int):
+            if index < 0:
+                index += self.num_showers
+            if index < 0 or index >= self.num_showers:
+                raise IndexError("Index out of range.")
             index = slice(index, index + 1)
         return Showers(
             points=_get_shower_data(self.file, "showers", index),
@@ -957,9 +964,16 @@ class ShowerDataFile:
             raise ValueError("File is not open.")
         if self.file.mode not in ("r+", "w", "a"):
             raise ValueError(f"File is not open for writing (mode: {self.file.mode}).")
-        if isinstance(index, tuple) and len(index) > 1:
-            raise ValueError("Multi-dimensional indexing is not supported.")
+        if isinstance(index, tuple):
+            if len(index) > 1 or len(index) == 0:
+                raise ValueError("Multi-dimensional indexing is not supported.")
+            else:
+                index = index[0]
         if isinstance(index, int):
+            if index < 0:
+                index += self.num_showers
+            if index < 0 or index >= self.num_showers:
+                raise IndexError("Index out of range.")
             index = slice(index, index + 1)
         showers = [
             shower[:num_points].flatten()
@@ -971,3 +985,6 @@ class ShowerDataFile:
         _save_batch_to_dataset(data.pdg, self.file, "pdg", index)
         _save_batch_to_dataset(data.shower_ids, self.file, "shower_ids", index)
         _save_batch_to_dataset(data._num_points, self.file, "num_points", index)
+
+    def __iter__(self) -> Iterator["Showers"]:
+        return iter(self[i] for i in range(len(self)))
