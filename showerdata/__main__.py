@@ -1,4 +1,6 @@
 import argparse
+import sys
+import warnings
 
 from . import cluster_module, detector, filter, observables, shift_showers, shuffle
 from ._version import __version__
@@ -22,8 +24,15 @@ def add_observables_parser_options(parser: argparse.ArgumentParser) -> None:
         "-l",
         "--num-layers",
         type=int,
-        default=-1,
+        default=0,
         help="Number of layers to process (default: 78)",
+    )
+    parser.add_argument(
+        "-t",
+        "--threshold",
+        type=float,
+        default=0.0,
+        help="Energy threshold for hits to be included in observables calculation (default: 0.0)",
     )
     parser.add_argument(
         "--overwrite",
@@ -32,7 +41,19 @@ def add_observables_parser_options(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def main():
+def simple_warning(
+    message: Warning | str,
+    category: type[Warning],
+    filename: str,
+    lineno: int,
+    line: str | None = None,
+) -> str:
+    """do not show line preview in warnings"""
+    return f"{filename}:{lineno}: {category.__name__}: {message}\n"
+
+
+def main() -> int:
+    warnings.formatwarning = simple_warning
     parser = argparse.ArgumentParser(description="Shower data format utility script")
     parser.add_argument(
         "-v",
@@ -67,6 +88,10 @@ def main():
     if args.command == "shuffle":
         shuffle.main(args)
     elif args.command == "add-observables":
+        if args.threshold < 0.0 and not args.num_layers:
+            warnings.warn(
+                "Energy threshold specified without number of layers. Threshold will be ignored."
+            )
         try:
             observables.add_observables_to_file(
                 path=args.filename,
@@ -74,18 +99,20 @@ def main():
                 overwrite=args.overwrite,
                 detector_config=(
                     None
-                    if args.num_layers == -1
-                    else detector.get_test_geometry(args.num_layers)
+                    if not args.num_layers
+                    else detector.get_test_geometry(args.num_layers, args.threshold)
                 ),
             )
         except ValueError as e:
             # Existing observables and overwrite not set
             # Full stack trace not useful to the user in this case
-            print(e)
-            return
+            warnings.warn(str(e))
+            return 1
         except KeyError:
-            print(f"Error: File {args.filename} does not contain valid shower data.")
-            return
+            warnings.warn(
+                f"Error: File {args.filename} does not contain valid shower data."
+            )
+            return 1
     elif args.command == "shift":
         shift_showers.main(args)
     elif args.command == "cluster":
@@ -94,7 +121,9 @@ def main():
         filter.main(args)
     else:
         parser.print_help()
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
