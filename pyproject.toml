@@ -26,9 +26,10 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ruff==0.14.8",
+    "ruff==0.16.6",
     "pre-commit==4.2.0",
     "ipykernel>=7.1.0",
+    "ty>=0.0.84",
 ]
 doc = [
     "sphinx>=8.1.3",
