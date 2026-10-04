@@ -827,7 +827,7 @@ def save_target_batch(
         >>> # Now you can use save_target_batch
         >>> target_data = np.random.rand(100, 500, 3).astype(np.float32)  # Example target data
         >>> num_points = np.random.randint(1, 501, size=(100,), dtype=np.int32)  # Example num_points
-        >>> showerdata.save_target_batch(target_data, num_points, "showers.h5", start=0, key="target")
+        >>> showerdata.save_target_batch(target_data, "showers.h5", num_points=num_points, start=0, key="target")
 
     Args:
         data (NDArray[np.float32]): Target data to save.

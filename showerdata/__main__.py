@@ -7,7 +7,7 @@ from ._version import __version__
 
 
 def add_observables_parser_options(parser: argparse.ArgumentParser) -> None:
-    """Add options for the 'add_observables' command to the parser."""
+    """Add options for the 'add-observables' command to the parser."""
     parser.add_argument(
         "filename",
         type=str,
@@ -25,7 +25,7 @@ def add_observables_parser_options(parser: argparse.ArgumentParser) -> None:
         "--num-layers",
         type=int,
         default=0,
-        help="Number of layers to process (default: 78)",
+        help="Number of layers to process (default: inferred from the detector geometry)",
     )
     parser.add_argument(
         "-t",

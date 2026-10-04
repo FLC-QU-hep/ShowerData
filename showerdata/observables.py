@@ -415,3 +415,10 @@ def read_point_energies(
     shower_list = [shower.reshape(-1, shape[2]) for shower in shower_list]
     point_energies = np.concatenate([shower[:, 3] for shower in shower_list], axis=0)
     return point_energies.astype(np.float32)
+
+
+save = save_observables_to_file
+"""Alias for :func:`save_observables_to_file`."""
+
+load = read_observables_from_file
+"""Alias for :func:`read_observables_from_file`."""
