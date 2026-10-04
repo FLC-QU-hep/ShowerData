@@ -50,10 +50,12 @@ def calc_num_points_per_layer(
 
     Args:
         showers (Showers): The showers to calculate the number of points per layer for.
-        num_layers (int, optional): The number of layers to consider. Defaults to -1 (infers from data).
+        num_layers (int, optional): The number of layers to consider. Defaults to -1
+            (infers from data).
 
     Returns:
-        NDArray: A 2D array of shape (num_showers, num_layers) containing the number of points per layer for each shower.
+        NDArray: A 2D array of shape (num_showers, num_layers) containing the number of
+            points per layer for each shower.
     """
     num_showers = len(showers)
     layer_idx = (showers.points[..., 2] + 0.1).astype(np.int32)
@@ -79,7 +81,8 @@ def calc_energy_per_layer(
         showers (Showers): The showers to calculate the total energy per layer for.
 
     Returns:
-        NDArray: A 2D array of shape (num_showers, num_layers) containing the total energy per layer for each shower.
+        NDArray: A 2D array of shape (num_showers, num_layers) containing the total
+            energy per layer for each shower.
     """
     num_showers = len(showers)
     layer_idx = (showers.points[..., 2] + 0.1).astype(np.int32)
@@ -105,10 +108,12 @@ def calc_energy_per_radial_bin(
 
     Args:
         showers (Showers): The showers to calculate the total energy per radial bin for.
-        bin_edges (ArrayLike, optional): The edges of the radial bins. If None, defaults to 200 bins from 0 to 400 mm.
+        bin_edges (ArrayLike, optional): The edges of the radial bins. If None, defaults
+            to 200 bins from 0 to 400 mm.
 
     Returns:
-        NDArray: A 2D array of shape (num_showers, num_bins) containing the total energy per radial bin for each shower.
+        NDArray: A 2D array of shape (num_showers, num_bins) containing the total energy
+            per radial bin for each shower.
     """
     if bin_edges is None:
         bin_edges = np.linspace(0, 400, 201, dtype=np.float32)
@@ -143,7 +148,8 @@ def calc_center_of_energy(
         showers (Showers): The showers to calculate the center of energy for.
 
     Returns:
-        NDArray: A 2D array of shape (num_showers, 3) containing the center of energy (x, y, z) for each shower.
+        NDArray: A 2D array of shape (num_showers, 3) containing the center of energy
+            (x, y, z) for each shower.
     """
     energies = showers.points[..., 3] * compute_threshold_mask(
         showers, detector_config
@@ -219,7 +225,8 @@ def add_observables_to_file(
 
     Args:
         path (str): The path to the HDF5 file.
-        batch_size (int): The number of showers to process in each batch. Defaults to 1000.
+        batch_size (int): The number of showers to process in each batch. Defaults to
+            1000.
         overwrite (bool): Whether to overwrite existing observables. Defaults to False.
     """
     num_showers = core.get_file_shape(path)[0]
@@ -240,7 +247,8 @@ def add_observables_to_file(
         if "observables" in file:
             if not overwrite:
                 raise ValueError(
-                    f"File {path} already contains an 'observables' group. Use overwrite option to replace it."
+                    f"File {path} already contains an 'observables' group. Use "
+                    "overwrite option to replace it."
                 )
             del file["observables"]
         group = file.create_group("observables")
@@ -278,7 +286,8 @@ def save_observables_to_file(
     Args:
         path (str): The path to the HDF5 file.
         observables (dict): A dictionary containing the observables to save.
-        overwrite (bool, optional): Whether to overwrite the file if it exists. Defaults to False.
+        overwrite (bool, optional): Whether to overwrite the file if it exists. Defaults
+            to False.
     """
     with h5py.File(path, "a") as file:
         groupe = file.require_group("observables")
@@ -309,7 +318,8 @@ def _add_sum_based_observables(
         results (dict): The dictionary containing the observables.
         file (h5py.File): The HDF5 file to read from.
         start (int, optional): The starting index of the showers to read. Defaults to 0.
-        stop (int, optional): The stopping index of the showers to read. Defaults to None.
+        stop (int, optional): The stopping index of the showers to read. Defaults to
+            None.
     """
     key_layer_wise = key.replace("total_", "") + "_per_layer"
     if key_layer_wise in results:
@@ -348,7 +358,8 @@ def read_observables_from_file(
         file (str): The HDF5 file to read from.
         observables (list[str], optional): The list of observables to read.
         start (int, optional): The starting index of the showers to read. Defaults to 0.
-        stop (int, optional): The stopping index of the showers to read. If None, reads until the end. Defaults to None.
+        stop (int, optional): The stopping index of the showers to read. If None, reads
+            until the end. Defaults to None.
 
     Returns:
         dict: A dictionary containing the observables.
@@ -404,10 +415,12 @@ def read_point_energies(
     Args:
         path (str): The HDF5 file to read from.
         start (int, optional): The starting index of the showers to read. Defaults to 0.
-        stop (int, optional): The stopping index of the showers to read. If None, reads until the end. Defaults to None.
+        stop (int, optional): The stopping index of the showers to read. If None, reads
+            until the end. Defaults to None.
 
     Returns:
-        NDArray: A 1D array containing the point energies of all showers in the specified range.
+        NDArray: A 1D array containing the point energies of all showers in the
+            specified range.
     """
     with h5py.File(path, "r") as file:
         shower_list = core._get_np_array(file, "showers", slice(start, stop))

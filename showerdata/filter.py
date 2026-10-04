@@ -110,7 +110,8 @@ def filter_file(
             output_file[start_idx:end_idx] = filtered_showers
             if verbose and (end_idx % (10 * batch_size) == 0 or end_idx == num_showers):
                 print(
-                    f"[{time.time() - start_time:6.1f}s]: Processed {end_idx} / {num_showers} showers."
+                    f"[{time.time() - start_time:6.1f}s]: Processed {end_idx} / "
+                    f"{num_showers} showers."
                 )
 
 
@@ -118,8 +119,8 @@ def get_detector_thresholds(
     path: str | os.PathLike[str],
 ) -> tuple[float, float, int]:
     """\
-    Get the energy thresholds for ECAL and HCAL from the detector module. Determines which detector
-    to use from the metadata in the specified shower data file.
+    Get the energy thresholds for ECAL and HCAL from the detector module. Determines
+    which detector to use from the metadata in the specified shower data file.
 
     Args:
         path: Path to the shower data file.
@@ -239,8 +240,10 @@ def main(args: argparse.Namespace) -> None:
         )
     except FileExistsError:
         warnings.warn(
-            f"Output file '{args.output}' already exists. Use --overwrite to overwrite it.",
+            f"Output file '{args.output}' already exists. Use --overwrite to overwrite "
+            "it.",
             UserWarning,
+            stacklevel=1,
         )
 
 

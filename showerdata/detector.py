@@ -143,7 +143,7 @@ def get_ILD_unclustered_geometry() -> DetectorGeometry:
 
 
 def get_test_geometry(num_layers: int, threshold: float = 0.0) -> DetectorGeometry:
-    """Returns a simple test geometry with the specified number of layers and energy threshold."""
+    """Returns a simple test geometry with the given number of layers and threshold."""
     return DetectorGeometry(
         calo_surface=100.0,
         num_layers=num_layers,

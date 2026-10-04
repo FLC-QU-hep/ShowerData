@@ -18,7 +18,8 @@ def test_cluster_empty_no_padding() -> None:
         "Energies do not match"
     )
     assert np.all(clustered_showers.pdg == showers.pdg), (
-        f"PDG codes do not match (got {clustered_showers.pdg} but expected {showers.pdg})"
+        f"PDG codes do not match (got {clustered_showers.pdg} but expected "
+        f"{showers.pdg})"
     )
 
 
@@ -36,7 +37,8 @@ def test_cluster_empty_with_padding() -> None:
         "Energies do not match"
     )
     assert np.all(clustered_showers.pdg == showers.pdg), (
-        f"PDG codes do not match (got {clustered_showers.pdg} but expected {showers.pdg})"
+        f"PDG codes do not match (got {clustered_showers.pdg} but expected "
+        f"{showers.pdg})"
     )
     assert np.all(clustered_showers.points == 0), "Points should remain zero"
 
@@ -99,13 +101,15 @@ def test_cluster_simple_case() -> None:
         f"Expected shape (2, 5, 4), got {clustered_showers.points.shape}"
     )
     assert np.allclose(clustered_showers.points, expected_points), (
-        f"Points do not match expected values. Got: {clustered_showers.points} Expected: {expected_points}"
+        f"Points do not match expected values. Got: {clustered_showers.points} "
+        f"Expected: {expected_points}"
     )
     assert np.all(clustered_showers.energies == showers.energies), (
         "Energies do not match"
     )
     assert np.all(clustered_showers.pdg == showers.pdg), (
-        f"PDG codes do not match (got {clustered_showers.pdg} but expected {showers.pdg})"
+        f"PDG codes do not match (got {clustered_showers.pdg} but expected "
+        f"{showers.pdg})"
     )
 
 
@@ -161,7 +165,8 @@ def test_cluster_multiple_hits_per_cell() -> None:
         "Energies do not match"
     )
     assert np.all(clustered_showers.pdg == showers.pdg), (
-        f"PDG codes do not match (got {clustered_showers.pdg} but expected {showers.pdg})"
+        f"PDG codes do not match (got {clustered_showers.pdg} but expected "
+        f"{showers.pdg})"
     )
 
 
@@ -211,13 +216,15 @@ def test_cluster_5d_points_with_time() -> None:
         f"Expected shape (1, 6, 5), got {clustered_showers.points.shape}"
     )
     assert np.allclose(clustered_showers.points, expected_points), (
-        f"Points do not match expected values. Got: {clustered_showers.points} Expected: {expected_points}"
+        f"Points do not match expected values. Got: {clustered_showers.points} "
+        f"Expected: {expected_points}"
     )
     assert np.all(clustered_showers.energies == showers.energies), (
         "Energies do not match"
     )
     assert np.all(clustered_showers.pdg == showers.pdg), (
-        f"PDG codes do not match (got {clustered_showers.pdg} but expected {showers.pdg})"
+        f"PDG codes do not match (got {clustered_showers.pdg} but expected "
+        f"{showers.pdg})"
     )
 
 
@@ -236,5 +243,6 @@ def test_cluster_5d_no_hits() -> None:
         "Energies do not match"
     )
     assert np.all(clustered_showers.pdg == showers.pdg), (
-        f"PDG codes do not match (got {clustered_showers.pdg} but expected {showers.pdg})"
+        f"PDG codes do not match (got {clustered_showers.pdg} but expected "
+        f"{showers.pdg})"
     )
