@@ -121,6 +121,7 @@ jobs:
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           VERSION=${TAG_NAME#v}
-          gh release create $TAG_NAME dist/* --title "ShowerData $VERSION"
+          bash .github/scripts/extract_release_notes.sh "$VERSION" > release_notes.md
+          gh release create "$TAG_NAME" dist/* --title "ShowerData $VERSION" --notes-file release_notes.md
         env:
           GH_TOKEN: ${{ github.token }}

@@ -10,6 +10,19 @@ All notable changes to ShowerData will be documented in this file.
 Added
 ~~~~~
 - ``save``/``load`` aliases for ``save_observables_to_file``/``read_observables_from_file`` in the observables module
+- ``-t``/``--threshold`` option for the ``add-observables`` CLI subcommand to set the hit energy threshold
+- ``threshold`` argument for ``detector.get_test_geometry``
+
+Changed
+~~~~~~~
+- CLI returns a non-zero exit code on errors and reports them as warnings on stderr
+- Removed upper bound on supported Python version
+- Complete type annotations across the codebase, checked with ``ty``
+
+Fixed
+~~~~~
+- Incorrect default in the ``--num-layers`` help text of the ``add-observables`` subcommand
+- Incorrect ``save_target_batch`` docstring example
 
 
 [0.6.1] - 2026-01-30
