@@ -2,7 +2,7 @@
 
 import os
 from collections.abc import Iterable, Iterator
-from types import EllipsisType
+from types import EllipsisType, TracebackType
 
 import h5py
 import numpy as np
@@ -19,11 +19,13 @@ class IncidentParticles:
     Args:
         energies (ArrayLike): Energies of the incident particles.
         pdg (ArrayLike or int): Particle Data Group identifier(s).
-        directions (Optional[ArrayLike]): Directions of the incident particles as a unit vector. Defaults to (0, 0, 1).
+        directions (Optional[ArrayLike]): Directions of the incident particles as a unit
+            vector. Defaults to (0, 0, 1).
 
     Attributes:
         energies (NDArray): Energies of the incident particles.
-        directions (NDArray): Directions of the incident particles given as a unit vector.
+        directions (NDArray): Directions of the incident particles given as a unit
+            vector.
         pdg (NDArray): Particle Data Group identifiers for the incident particles.
     """
 
@@ -32,7 +34,7 @@ class IncidentParticles:
         energies: ArrayLike,
         pdg: ArrayLike | int,
         directions: ArrayLike | None = None,
-    ):
+    ) -> None:
         self.energies: NDArray[np.float32]
         self.pdg: NDArray[np.int32]
         self.directions: NDArray[np.float32]
@@ -63,7 +65,10 @@ class IncidentParticles:
             raise ValueError("All input arrays must have the same length.")
 
     def __repr__(self) -> str:
-        return f"IncidentParticles(energies={self.energies}, pdg={self.pdg}, directions={self.directions})"
+        return (
+            f"IncidentParticles(energies={self.energies}, pdg={self.pdg}, "
+            f"directions={self.directions})"
+        )
 
     def __len__(self) -> int:
         return self.energies.shape[0]
@@ -114,14 +119,19 @@ class Showers:
         points (ArrayLike): Shower point cloud.
         energies (ArrayLike): Energies of the incident particles.
         pdg (ArrayLike or int): Particle Data Group identifier(s).
-        directions (Optional[ArrayLike]): Directions of the incident particles as a unit vector. Defaults to (0, 0, 1).
-        shower_ids (Optional[ArrayLike]): Unique identifiers for each shower. Defaults to sequential IDs.
-        copy (bool | None): If True, data will be copied to ensure immutability. Defaults to None.
+        directions (Optional[ArrayLike]): Directions of the incident particles as a unit
+            vector. Defaults to (0, 0, 1).
+        shower_ids (Optional[ArrayLike]): Unique identifiers for each shower. Defaults
+            to sequential IDs.
+        copy (bool | None): If True, data will be copied to ensure immutability.
+            Defaults to None.
 
     Attributes:
-        points (NDArray): Array of shower points. Format: (num_showers, max_points, 4 or 5).
+        points (NDArray): Array of shower points. Format:
+            (num_showers, max_points, 4 or 5).
         energies (NDArray): Energies of the incident particles.
-        directions (NDArray): Directions of the incident particles given as a unit vector.
+        directions (NDArray): Directions of the incident particles given as a unit
+            vector.
         pdg (NDArray): Particle Data Group identifiers for the incident particles.
         shower_ids (NDArray): Unique identifiers for each shower.
     """
@@ -172,10 +182,11 @@ class Showers:
         self._num_points: NDArray[np.int32] = num_points_array
         self.__post_init__()
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if self.points.ndim != 3 or self.points.shape[2] not in (4, 5):
             raise ValueError(
-                f"Points must be a 3D array with shape (num_showers, max_points, 4 or 5) got {self.points.shape}"
+                "Points must be a 3D array with shape "
+                f"(num_showers, max_points, 4 or 5) got {self.points.shape}"
             )
         if self.energies.ndim != 2 or self.energies.shape != (self.points.shape[0], 1):
             raise ValueError("Energies must be a 2D array with shape (num_showers, 1).")
@@ -493,10 +504,12 @@ def save_target(
 
     Args:
         data (NDArray[np.float32]): Target data to save.
-        num_points (NDArray[np.int32] | None): Number of points for each shower in the target data.
+        num_points (NDArray[np.int32] | None): Number of points for each shower in the
+            target data.
         path (str | os.PathLike[str]): Path to the HDF5 file.
         name (str): Name of the target dataset in the HDF5 file. Defaults to "target".
-        overwrite (bool): If True, overwrite existing dataset in file. Defaults to False.
+        overwrite (bool): If True, overwrite existing dataset in file. Defaults to
+            False.
     """
     if num_points is None and not os.path.isfile(path):
         raise ValueError("num_points must be provided if the file does not exist yet.")
@@ -516,7 +529,8 @@ def save_target(
         raise ValueError("num_points values must be non-negative.")
     if np.any(num_points > data.shape[1]):
         raise ValueError(
-            f"num_points values cannot exceed the maximum number of points ({data.shape[1]})."
+            "num_points values cannot exceed the maximum number of points "
+            f"({data.shape[1]})."
         )
     point_clouds = [
         shower[:num_points_l].flatten().astype(np.float32)
@@ -529,7 +543,8 @@ def save_target(
                 del h5file[name]
             else:
                 raise FileExistsError(
-                    f"Dataset '{name}' already exists in {path}. Use overwrite=True to overwrite."
+                    f"Dataset '{name}' already exists in {path}. Use overwrite=True to "
+                    "overwrite."
                 )
         h5file.create_group(name)
 
@@ -615,8 +630,10 @@ def load(
     Args:
         path (str | os.PathLike[str]): Path to the HDF5 file.
         start (int): Start index for loading showers. Defaults to 0.
-        stop (Optional[int]): Stop index for loading showers. If None, load until end of file. Defaults to None.
-        max_points (int): Maximum number of points to load per shower. If -1, load all points. Defaults to -1.
+        stop (Optional[int]): Stop index for loading showers. If None, load until end of
+            file. Defaults to None.
+        max_points (int): Maximum number of points to load per shower. If -1, load all
+            points. Defaults to -1.
 
     Returns:
         Showers: Loaded shower data.
@@ -643,16 +660,20 @@ def load_target(
     max_points: int | None = -1,
 ) -> tuple[NDArray[np.float32], NDArray[np.int32]]:
     """
-    Load latent space target data for a specific generative model from an HDF5 file. The target usually has the same shape as the shower points.
+    Load latent space target data for a specific generative model from an HDF5 file. The
+    target usually has the same shape as the shower points.
 
     Args:
         path (str | os.PathLike[str]): Path to the HDF5 file.
         key (str): Name of the target dataset in the HDF5 file. Defaults to "target".
         start (int): Start index for loading target data. Defaults to 0.
-        stop (Optional[int]): Stop index for loading target data. If None, load until end of file. Defaults to None.
-        max_points (Optional[int]): Maximum number of points to load per shower. If -1, load all points. Defaults to -1.
+        stop (Optional[int]): Stop index for loading target data. If None, load until
+            end of file. Defaults to None.
+        max_points (Optional[int]): Maximum number of points to load per shower. If -1,
+            load all points. Defaults to -1.
     Returns:
-        tuple[NDArray[np.float32], NDArray[np.int32]]: Loaded target data and corresponding number of points.
+        tuple[NDArray[np.float32], NDArray[np.int32]]: Loaded target data and
+            corresponding number of points.
     """
     if max_points is None:
         max_points = -1
@@ -672,7 +693,8 @@ def load_inc_particles(
     Args:
         path (str | os.PathLike[str]): Path to the HDF5 file.
         start (int): Start index for loading incident particles. Defaults to 0.
-        stop (Optional[int]): Stop index for loading incident particles. If None, load until end of file. Defaults to None.
+        stop (Optional[int]): Stop index for loading incident particles. If None, load
+            until end of file. Defaults to None.
 
     Returns:
         IncidentParticles: Loaded incident particle data.
@@ -690,7 +712,8 @@ def create_empty_file(
     path: str | os.PathLike[str], shape: tuple[int, int, int], overwrite: bool = True
 ) -> None:
     """
-    Create an empty HDF5 file with the specified dataset shape. To be used before calling save_batch.
+    Create an empty HDF5 file with the specified dataset shape. To be used before
+    calling save_batch.
 
     Args:
         path (str | os.PathLike[str]): Path to the HDF5 file.
@@ -727,7 +750,8 @@ def add_target_dataset(
         path (str | os.PathLike[str]): Path to the HDF5 file.
         shape (tuple[int, int, int]): Shape of the target dataset.
         key (str): Name of the target dataset in the HDF5 file. Defaults to "target".
-        exists_ok (bool): If True, do not raise an error if the target dataset already exists. Defaults to False.
+        exists_ok (bool): If True, do not raise an error if the target dataset already
+            exists. Defaults to False.
     """
     with h5py.File(path, "a") as file:
         if key in file:
@@ -769,7 +793,8 @@ def _save_batch_to_dataset(
 
 def save_batch(data: Showers, path: str | os.PathLike[str], start: int = 0) -> None:
     """
-    Save a batch of shower data to an HDF5 file. The file must already exist and have the correct shape.
+    Save a batch of shower data to an HDF5 file. The file must already exist and have
+    the correct shape.
     Use create_empty_file to create the file first.
 
     Example:
@@ -799,7 +824,8 @@ def save_batch(data: Showers, path: str | os.PathLike[str], start: int = 0) -> N
             )
         if shape[0] < start + len(data):
             raise IndexError(
-                f"Cannot write to {path}: start index {start} + data length {len(data)} exceeds file shape {shape[0]}"
+                f"Cannot write to {path}: start index {start} + data length "
+                f"{len(data)} exceeds file shape {shape[0]}"
             )
         _save_batch_to_dataset(showers_list, file, "showers", start)
         _save_batch_to_dataset(data.energies, file, "energies", start)
@@ -817,22 +843,29 @@ def save_target_batch(
     key: str = "target",
 ) -> None:
     """
-    Save a batch of latent space target data for a specific generative model to an HDF5 file.
+    Save a batch of latent space target data for a specific generative model to an HDF5
+    file.
     The target usually has the same shape as the shower points.
-    The file must already exist and have the correct shape. Use add_target_dataset to create the target dataset first.
+    The file must already exist and have the correct shape. Use add_target_dataset to
+    create the target dataset first.
 
     Example:
         >>> showerdata.create_empty_file("showers.h5", shape=(1000, 500, 5))
-        >>> showerdata.add_target_dataset("showers.h5", shape=(1000, 500, 3), key="target")
+        >>> showerdata.add_target_dataset(
+        ...     "showers.h5", shape=(1000, 500, 3), key="target"
+        ... )
         >>> # Now you can use save_target_batch
-        >>> target_data = np.random.rand(100, 500, 3).astype(np.float32)  # Example target data
-        >>> num_points = np.random.randint(1, 501, size=(100,), dtype=np.int32)  # Example num_points
-        >>> showerdata.save_target_batch(target_data, "showers.h5", num_points=num_points, start=0, key="target")
+        >>> target_data = np.random.rand(100, 500, 3).astype(np.float32)
+        >>> num_points = np.random.randint(1, 501, size=(100,), dtype=np.int32)
+        >>> showerdata.save_target_batch(
+        ...     target_data, "showers.h5", num_points=num_points, start=0, key="target"
+        ... )
 
     Args:
         data (NDArray[np.float32]): Target data to save.
         path (str | os.PathLike[str]): Path to the HDF5 file.
-        num_points (NDArray[np.int32] | None): Number of points for each shower in the target data.
+        num_points (NDArray[np.int32] | None): Number of points for each shower in the
+            target data.
         start (int): Start index in the file. Defaults to 0.
         key (str): Name of the target dataset in the HDF5 file. Defaults to "target".
     """
@@ -854,7 +887,8 @@ def save_target_batch(
         raise ValueError("num_points values must be non-negative.")
     if np.any(num_points > data.shape[1]):
         raise ValueError(
-            f"num_points values cannot exceed the maximum number of points ({data.shape[1]})."
+            "num_points values cannot exceed the maximum number of points "
+            f"({data.shape[1]})."
         )
 
     point_clouds = [
@@ -890,8 +924,10 @@ class ShowerDataFile:
 
     Args:
         path (str | os.PathLike[str]): Path to the HDF5 file.
-        mode (str): File mode, either 'r' (read), 'w' (write), or 'a' (append). Defaults to 'r'.
-        shape (Optional[tuple[int, int, int]]): Shape of the showers dataset when creating a new file. Required if mode is 'w'.
+        mode (str): File mode, either 'r' (read), 'w' (write), or 'a' (append). Defaults
+            to 'r'.
+        shape (Optional[tuple[int, int, int]]): Shape of the showers dataset when
+            creating a new file. Required if mode is 'w'.
     """
 
     def __init__(
@@ -913,13 +949,18 @@ class ShowerDataFile:
         self.file = h5py.File(path, mode)
         self.attrs = self.file.attrs
 
-    def __enter__(self):
+    def __enter__(self) -> "ShowerDataFile":
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         self.close()
 
-    def close(self):
+    def close(self) -> None:
         """Close the HDF5 file."""
         self.file.close()
 

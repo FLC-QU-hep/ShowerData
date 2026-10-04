@@ -13,6 +13,8 @@ from .core import Showers
 
 __all__ = ["cluster"]
 
+_ILD_GEOMETRY = detector.get_ILD_geometry()
+
 
 def _version_ge(v1: str, v2: str) -> bool:
     """Check if version string v1 is greater than or equal to v2."""
@@ -138,7 +140,7 @@ def _process_shower(
 def cluster(
     showers: Showers,
     random_shift: bool = True,
-    detector_config: detector.DetectorGeometry = detector.get_ILD_geometry(),
+    detector_config: detector.DetectorGeometry = _ILD_GEOMETRY,
     processes: int = 1,
 ) -> Showers:
     """Cluster hits into readout cells using a regular grid.
@@ -147,7 +149,8 @@ def cluster(
         showers: Showers to cluster.
         random_shift: Whether to apply a random shift to the grid (default: True).
         detector_config: Simplified detector description (default: ILD).
-        processes: Number of parallel processes to use (default: 1, i.e. no parallelism).
+        processes: Number of parallel processes to use (default: 1, i.e. no
+            parallelism).
 
     Returns:
         Clustered showers.
@@ -222,7 +225,8 @@ def main(args: argparse.Namespace) -> None:
             )
             out_file[start:end] = clustered_showers
             print(
-                f"[{time.time() - start_time:8.2f}s] Processed showers {start} to {end}."
+                f"[{time.time() - start_time:8.2f}s] Processed showers {start} to "
+                f"{end}."
             )
 
 

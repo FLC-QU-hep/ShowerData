@@ -1,4 +1,7 @@
-"""Command-line tool to concatenate and shuffle shower data from multiple files and save to a new file."""
+"""Command-line tool to concatenate and shuffle shower data from multiple files.
+
+The shuffled showers are saved to a new file.
+"""
 
 import argparse
 import time
@@ -111,6 +114,7 @@ def process_in_batches(
     total_showers = len(shuffled_indices)
 
     showerdata.create_empty_file(output_file, shape=shape, overwrite=overwrite)
+    num_batches = (total_showers + batch_size - 1) // batch_size
 
     for batch_start in range(0, total_showers, batch_size):
         batch_end = min(batch_start + batch_size, total_showers)
@@ -118,7 +122,7 @@ def process_in_batches(
 
         print(
             f"[{time.strftime('%H:%M:%S')}]"
-            f"Processing batch {batch_start // batch_size + 1}/{(total_showers + batch_size - 1) // batch_size} "
+            f"Processing batch {batch_start // batch_size + 1}/{num_batches} "
             f"(showers {batch_start + 1}-{batch_end})"
         )
 
@@ -139,11 +143,11 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main(args: argparse.Namespace):
+def main(args: argparse.Namespace) -> None:
     print(f"Analyzing {len(args.input_files)} input files...")
     file_info = get_file_info(args.input_files, max_showers_per_file=args.test)
     total_showers = sum(count for _, count in file_info)
-    result_shape = (total_showers,) + showerdata.get_file_shape(file_info[0][0])[1:]
+    result_shape = (total_showers, *showerdata.get_file_shape(file_info[0][0])[1:])
 
     if total_showers == 0:
         print("No showers to process!")

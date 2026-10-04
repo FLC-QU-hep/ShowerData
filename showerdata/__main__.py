@@ -25,14 +25,19 @@ def add_observables_parser_options(parser: argparse.ArgumentParser) -> None:
         "--num-layers",
         type=int,
         default=0,
-        help="Number of layers to process (default: inferred from the detector geometry)",
+        help=(
+            "Number of layers to process (default: inferred from the detector geometry)"
+        ),
     )
     parser.add_argument(
         "-t",
         "--threshold",
         type=float,
         default=0.0,
-        help="Energy threshold for hits to be included in observables calculation (default: 0.0)",
+        help=(
+            "Energy threshold for hits to be included in observables calculation "
+            "(default: 0.0)"
+        ),
     )
     parser.add_argument(
         "--overwrite",
@@ -53,7 +58,7 @@ def simple_warning(
 
 
 def main() -> int:
-    warnings.formatwarning = simple_warning
+    warnings.formatwarning = simple_warning  # type: ignore
     parser = argparse.ArgumentParser(description="Shower data format utility script")
     parser.add_argument(
         "-v",
@@ -90,7 +95,9 @@ def main() -> int:
     elif args.command == "add-observables":
         if args.threshold < 0.0 and not args.num_layers:
             warnings.warn(
-                "Energy threshold specified without number of layers. Threshold will be ignored."
+                "Energy threshold specified without number of layers. Threshold will "
+                "be ignored.",
+                stacklevel=1,
             )
         try:
             observables.add_observables_to_file(
@@ -106,11 +113,12 @@ def main() -> int:
         except ValueError as e:
             # Existing observables and overwrite not set
             # Full stack trace not useful to the user in this case
-            warnings.warn(str(e))
+            warnings.warn(str(e), stacklevel=1)
             return 1
         except KeyError:
             warnings.warn(
-                f"Error: File {args.filename} does not contain valid shower data."
+                f"Error: File {args.filename} does not contain valid shower data.",
+                stacklevel=1,
             )
             return 1
     elif args.command == "shift":
