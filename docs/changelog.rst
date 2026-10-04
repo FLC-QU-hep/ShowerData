@@ -4,6 +4,14 @@ Changelog
 All notable changes to ShowerData will be documented in this file.
 
 
+[Unreleased]
+------------
+
+Added
+~~~~~
+- ``save``/``load`` aliases for ``save_observables_to_file``/``read_observables_from_file`` in the observables module
+
+
 [0.6.1] - 2026-01-30
 --------------------
 Fixed

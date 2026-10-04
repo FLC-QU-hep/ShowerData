@@ -11,7 +11,7 @@ Features
 * **Efficient HDF5 Storage**: Storing variable-length point clouds without padding
 * **Easy Data Access**: Simple API for loading and saving shower data
 * **Observable Calculations**: Functions to compute basic observables
-* **Command-Line Interface**: Tools for shuffling, adding observables, shifting, and clustering showers
+* **Command-Line Interface**: Tools for shuffling, adding observables, shifting, clustering, and filtering showers
 
 Quick Start
 -----------
@@ -44,7 +44,7 @@ Load and work with shower data:
 
    # Load precomputed observables if available
    # Note: running "showerdata add-observables" first is recommended
-   observables = showerdata.observables.read_observables_from_file(
+   observables = showerdata.observables.load(
       path="path/to/your/file.h5",
       stop=10,
       observables=["num_points_per_layer", "energy_per_layer"]
