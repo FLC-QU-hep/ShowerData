@@ -4,8 +4,8 @@ Changelog
 All notable changes to ShowerData will be documented in this file.
 
 
-[Unreleased]
-------------
+[0.7.0] - 2026-10-02
+--------------------
 
 Added
 ~~~~~
