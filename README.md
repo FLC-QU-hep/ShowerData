@@ -1,6 +1,6 @@
 # ShowerData
 [![PyPI](https://img.shields.io/pypi/v/showerdata)](https://pypi.org/project/showerdata/)
-[![Python Version](https://img.shields.io/pypi/pyversions/showerdata)](https://www.python.org/)
+[![Python Version](https://shields.io/badge/python-3.10+-blue)](https://www.python.org/)
 [![License](https://img.shields.io/pypi/l/showerdata)](https://github.com/FLC-QU-hep/ShowerData/blob/main/LICENSE)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/FLC-QU-hep/ShowerData/publish.yml?label=build&logo=github)](https://github.com/FLC-QU-hep/ShowerData/actions/workflows/publish.yml)
 [![Unittests](https://img.shields.io/github/actions/workflow/status/FLC-QU-hep/ShowerData/ci.yml?label=unittests&logo=github)](https://github.com/FLC-QU-hep/ShowerData/actions/workflows/ci.yml)
