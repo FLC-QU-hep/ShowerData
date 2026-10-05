@@ -28,3 +28,4 @@ repos:
     rev: v0.0.80
     hooks:
       - id: ty
+        args: [--group, test]
