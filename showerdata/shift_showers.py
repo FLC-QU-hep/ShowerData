@@ -28,19 +28,21 @@ def shift_layers(
     if inverse:
         shifted_shower[:, 0] += direction[0] / direction[2] * z_coordinate
         shifted_shower[:, 1] += direction[1] / direction[2] * z_coordinate
+        return shifted_shower
     else:
         shifted_shower[:, 0] -= direction[0] / direction[2] * z_coordinate
         shifted_shower[:, 1] -= direction[1] / direction[2] * z_coordinate
-    box = math.tan(math.pi / 8) * calo_surface
-    mask = (
-        (shifted_shower[:, 0] > -box)
-        & (shifted_shower[:, 0] < box)
-        & (shifted_shower[:, 1] > -box)
-        & (shifted_shower[:, 1] < box)
-    )
-    result = np.zeros_like(shifted_shower)
-    result[: np.count_nonzero(mask)] = shifted_shower[mask]
-    return result
+
+        box = math.tan(math.pi / 8) * calo_surface
+        mask = (
+            (shifted_shower[:, 0] > -box)
+            & (shifted_shower[:, 0] < box)
+            & (shifted_shower[:, 1] > -box)
+            & (shifted_shower[:, 1] < box)
+        )
+        result = np.zeros_like(shifted_shower)
+        result[: np.count_nonzero(mask)] = shifted_shower[mask]
+        return result
 
 
 def process_files(
