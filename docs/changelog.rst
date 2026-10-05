@@ -21,6 +21,7 @@ Changed
 
 Fixed
 ~~~~~
+- Fixed the behavior of the `shift_layers` function not to apply the box cut when the inverse flag is set
 - Incorrect default in the ``--num-layers`` help text of the ``add-observables`` subcommand
 - Incorrect ``save_target_batch`` docstring example
 
