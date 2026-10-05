@@ -26,8 +26,8 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ruff==0.16.6",
-    "pre-commit==4.2.0",
+    "ruff>=0.16.6",
+    "pre-commit>=4.2.0",
     "ipykernel>=7.1.0",
     "ty>=0.0.84",
 ]
@@ -37,7 +37,7 @@ doc = [
     "sphinx-rtd-theme>=3.0.2",
 ]
 test = [
-    "pytest==8.4.1",
+    "pytest>=9.0.3",
 ]
 
 [project.scripts]
